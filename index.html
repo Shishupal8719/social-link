@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>दुकान / सर्विस बुकिंग पोर्टल</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #222;
+        }
+
+        /* 1. सबसे ऊपर बीचों-बीच दुकान का मोटा नाम */
+        header {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        header h1 {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        .section-heading {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1b5e20;
+            margin-bottom: 25px;
+        }
+
+        /* 2. प्रोडक्ट्स की फोटो, कीमत, डिटेल्स और ऑर्डर बटन */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+        .card-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #111;
+        }
+        .card-price {
+            font-size: 22px;
+            font-weight: 900;
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        .card-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            flex-grow: 1;
+        }
+        .order-btn {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+        }
+        .order-btn:hover {
+            background-color: #1ebe5d;
+        }
+
+        /* 3. ऑर्डर बटन दबाने पर कस्टमर जानकारी का पॉपअप (Modal) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1b5e20;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 15px;
+            font-size: 22px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #777;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        .send-whatsapp-btn {
+            width: 100%;
+            background-color: #075e54;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .send-whatsapp-btn:hover {
+            background-color: #054c44;
+        }
+
+        footer {
+            background: #222;
+            color: #aaa;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. दुकान का मोटा नाम सबसे ऊपर बीच में -->
+    <header>
+        <h1>श्री राधे टैन्ट हाऊस एण्ड डी.जे. साउण्ड</h1>
+        <p>संपर्क नंबर: 8719086416 | हमारे यहाँ शादी, पार्टी और इवेंट के लिए पूरा सामान उपलब्ध है</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-heading">हमारे प्रोडक्ट्स व सर्विसेज</h2>
+
+        <!-- 2. प्रोडक्ट्स की लिस्ट, फोटो, कीमत और डिटेल्स -->
+        <div class="grid">
+            <!-- आइटम 1 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600" alt="DJ Sound">
+                <div class="card-body">
+                    <div class="card-title">फुल डी.जे. साउण्ड सेटअप</div>
+                    <div class="card-price">₹5,000 / दिन</div>
+                    <div class="card-desc">पार्टी और शादी के लिए हैवी बेस स्पीकर, एम्पलीफायर, माइक और लाइट के साथ कम्प्लीट सेटअप।</div>
+                    <button class="order-btn" onclick="openOrderModal('फुल डी.जे. साउण्ड सेटअप', '₹5,000 / दिन')">ऑर्डर / बुक करें</button>
+                </div>
+            </div>
+
+            <!-- आइटम 2 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600" alt="Tent House">
+                <div class="card-body">
+                    <div class="card-title">टैन्ट एवं सजावट सेटअप</div>
+                    <div class="card-price">₹10,000 से शुरू</div>
+                    <div class="card-desc">वॉटरप्रूफ टैन्ट, पाइप फ्रेम, कुर्सी, टेबल, कालीन, राउंड टेबल और खूबसूरत पर्दा सजावट।</div>
+                    <button class="order-btn" onclick="openOrderModal('टैन्ट एवं सजावट सेटअप', '₹10,000 से शुरू')">ऑर्डर / बुक करें</button>
+                </div>
+            </div>
+
+            <!-- आइटम 3 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600" alt="Lighting">
+                <div class="card-body">
+                    <div class="card-title">इवेंट लाइट डेकोरेशन</div>
+                    <div class="card-price">₹3,500 / दिन</div>
+                    <div class="card-desc">एलईडी फोकस, पार लाइट, मूविंग हेड्स और स्टेज डेकोरेशन लाइटिंग पूरी फिटिंग के साथ।</div>
+                    <button class="order-btn" onclick="openOrderModal('इवेंट लाइट डेकोरेशन', '₹3,500 / दिन')">ऑर्डर / बुक करें</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. कस्टमर जानकारी फॉर्म (पॉपअप) -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            <div class="modal-header">ऑर्डर विवरण दर्ज करें</div>
+
+            <div class="form-group">
+                <label>चुना हुआ सामान:</label>
+                <input type="text" id="selectedItem" readonly style="background-color: #f0f0f0; font-weight: bold;">
+            </div>
+
+            <div class="form-group">
+                <label>आपका नाम (Full Name):</label>
+                <input type="text" id="custName" placeholder="अपना पूरा नाम दर्ज करें" required>
+            </div>
+
+            <div class="form-group">
+                <label>मोबाइल नंबर (Mobile No.):</label>
+                <input type="tel" id="custPhone" placeholder="अपना 10 अंकों का मोबाइल नंबर" required>
+            </div>
+
+            <div class="form-group">
+                <label>डिलीवरी / प्रोग्राम का पूरा पता (Address):</label>
+                <textarea id="custAddress" rows="3" placeholder="मकान नंबर, गली, गांव/कस्बा, पिनकोड" required></textarea>
+            </div>
+
+            <button class="send-whatsapp-btn" onclick="sendOrderToWhatsApp()">📲 WhatsApp पर ऑर्डर भेजें</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© Shishupal sonud </p>
+    </footer>
+
+    <script>
+        // आपका WhatsApp नंबर (यहाँ 91 लगाकर नंबर सेट है)
+        const myWhatsAppNumber = "918719086416";
+
+        let currentProduct = "";
+        let currentPrice = "";
+
+        // ऑर्डर बटन दबाने पर फॉर्म खोलना
+        function openOrderModal(itemName, itemPrice) {
+            currentProduct = itemName;
+            currentPrice = itemPrice;
+            document.getElementById('selectedItem').value = itemName + " (" + itemPrice + ")";
+            document.getElementById('orderModal').style.display = 'flex';
+        }
+
+        // फॉर्म बंद करना
+        function closeOrderModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        // WhatsApp पर मैसेज तैयार करके भेजना
+        function sendOrderToWhatsApp() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+
+            if (!name || !phone || !address) {
+                alert("कृपया नाम, मोबाइल नंबर और पता पूरी तरह भरें!");
+                return;
+            }
+
+            const message = `📦 *नया ऑर्डर / बुकिंग आई है!* 📦\n\n` +
+                            `🛍️ *सामान:* ${currentProduct}\n` +
+                            `💰 *कीमत:* ${currentPrice}\n\n` +
+                            `👤 *ग्राहक का नाम:* ${name}\n` +
+                            `📞 *मोबाइल नंबर:* ${phone}\n` +
+                            `📍 *पता:* ${address}\n\n` +
+                            `कृपया जल्दी संपर्क करके ऑर्डर कन्फर्म करें।`;
+
+            const url = `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+            closeOrderModal();
+        }
+    </script>
+</body>
+</html>
